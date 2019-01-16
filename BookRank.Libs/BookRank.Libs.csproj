@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="awssdk.dynamodbv2" Version="3.3.17" />
+  </ItemGroup>
+
 </Project>
