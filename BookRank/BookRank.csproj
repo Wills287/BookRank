@@ -15,4 +15,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BookRank.Contracts\BookRank.Contracts.csproj" />
+    <ProjectReference Include="..\BookRank.Libs\BookRank.Libs.csproj" />
+  </ItemGroup>
+
 </Project>
