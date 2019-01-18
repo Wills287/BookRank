@@ -43,5 +43,10 @@ namespace BookRank.Libs.Repositories
         {
             await _context.SaveAsync(bookDb);
         }
+
+        public async Task UpdateBook(BookDb bookDb)
+        {
+            await _context.SaveAsync(bookDb);
+        }
     }
 }

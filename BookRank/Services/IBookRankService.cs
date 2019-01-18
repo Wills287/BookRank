@@ -13,5 +13,7 @@ namespace BookRank.Services
         Task<IEnumerable<BookResponse>> GetUsersRankedBooksByTitle(int userId, string bookName);
 
         Task AddBook(int userId, BookRankRequest request);
+
+        Task UpdateBook(int userId, BookUpdateRequest request);
     }
 }

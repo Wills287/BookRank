@@ -13,5 +13,7 @@ namespace BookRank.Libs.Repositories
         Task<IEnumerable<BookDb>> GetUsersRankedBooksByTitle(int userId, string bookName);
 
         Task AddBook(BookDb bookDb);
+
+        Task UpdateBook(BookDb bookDb);
     }
 }

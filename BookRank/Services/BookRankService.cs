@@ -45,5 +45,14 @@ namespace BookRank.Services
 
             await _bookRankRepository.AddBook(bookDb);
         }
+
+        public async Task UpdateBook(int userId, BookUpdateRequest request)
+        {
+            var response = await _bookRankRepository.GetBook(userId, request.BookName);
+
+            var bookDb = _mapper.ToBookDbModel(userId, response, request);
+
+            await _bookRankRepository.UpdateBook(bookDb);
+        }
     }
 }

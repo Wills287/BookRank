@@ -11,5 +11,7 @@ namespace BookRank.Libs.Mappers
         BookResponse ToBookContract(BookDb book);
 
         BookDb ToBookDbModel(int userId, BookRankRequest request);
+
+        BookDb ToBookDbModel(int userId, BookDb response, BookUpdateRequest request);
     }
 }

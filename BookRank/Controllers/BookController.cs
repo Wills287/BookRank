@@ -50,5 +50,14 @@ namespace BookRank.Controllers
 
             return Ok();
         }
+
+        [HttpPatch]
+        [Route("{userId}")]
+        public async Task<IActionResult> UpdateBook(int userId, [FromBody] BookUpdateRequest request)
+        {
+            await _bookRankService.UpdateBook(userId, request);
+
+            return Ok();
+        }
     }
 }

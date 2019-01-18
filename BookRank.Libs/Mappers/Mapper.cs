@@ -37,5 +37,18 @@ namespace BookRank.Libs.Mappers
                 RankedDateTime = DateTime.UtcNow.ToString()
             };
         }
+
+        public BookDb ToBookDbModel(int userId, BookDb response, BookUpdateRequest request)
+        {
+            return new BookDb
+            {
+                UserId = response.UserId,
+                BookName = response.BookName,
+                Description = response.Description,
+                Genres = response.Genres,
+                Ranking = request.Ranking,
+                RankedDateTime = DateTime.UtcNow.ToString()
+            };
+        }
     }
 }
