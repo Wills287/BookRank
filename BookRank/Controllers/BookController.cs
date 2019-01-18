@@ -59,5 +59,14 @@ namespace BookRank.Controllers
 
             return Ok();
         }
+
+        [HttpGet]
+        [Route("{bookName}/ranking")]
+        public async Task<BookRankResponse> GetBooksRanking(string bookName)
+        {
+            var result = await _bookRankService.GetBookRank(bookName);
+
+            return result;
+        }
     }
 }

@@ -48,5 +48,15 @@ namespace BookRank.Libs.Repositories
         {
             await _context.SaveAsync(bookDb);
         }
+
+        public async Task<IEnumerable<BookDb>> GetBookRank(string bookName)
+        {
+            var config = new DynamoDBOperationConfig
+            {
+                IndexName = "BookName-index"
+            };
+
+            return await _context.QueryAsync<BookDb>(bookName, config).GetRemainingAsync();
+        }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using BookRank.Contracts;
 using BookRank.Libs.Mappers;
 using BookRank.Libs.Repositories;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BookRank.Services
@@ -53,6 +55,19 @@ namespace BookRank.Services
             var bookDb = _mapper.ToBookDbModel(userId, response, request);
 
             await _bookRankRepository.UpdateBook(bookDb);
+        }
+
+        public async Task<BookRankResponse> GetBookRank(string bookName)
+        {
+            var response = await _bookRankRepository.GetBookRank(bookName);
+
+            var overallBookRanking = Math.Round(response.Select(x => x.Ranking).Average());
+
+            return new BookRankResponse
+            {
+                BookName = bookName,
+                OverallRanking = overallBookRanking
+            };
         }
     }
 }

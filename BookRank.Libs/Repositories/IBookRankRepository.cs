@@ -15,5 +15,7 @@ namespace BookRank.Libs.Repositories
         Task AddBook(BookDb bookDb);
 
         Task UpdateBook(BookDb bookDb);
+
+        Task<IEnumerable<BookDb>> GetBookRank(string bookName);
     }
 }

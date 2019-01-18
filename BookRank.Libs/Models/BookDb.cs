@@ -9,6 +9,7 @@ namespace BookRank.Libs.Models
         [DynamoDBHashKey]
         public int UserId { get; set; }
 
+        [DynamoDBGlobalSecondaryIndexHashKey]
         public string BookName { get; set; }
 
         public string Description { get; set; }

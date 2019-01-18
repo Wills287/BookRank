@@ -15,5 +15,7 @@ namespace BookRank.Services
         Task AddBook(int userId, BookRankRequest request);
 
         Task UpdateBook(int userId, BookUpdateRequest request);
+
+        Task<BookRankResponse> GetBookRank(string bookName);
     }
 }
