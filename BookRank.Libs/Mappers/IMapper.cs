@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using Amazon.DynamoDBv2.DocumentModel;
 using BookRank.Contracts;
-using BookRank.Libs.Models;
+using System.Collections.Generic;
 
 namespace BookRank.Libs.Mappers
 {
     public interface IMapper
     {
-        IEnumerable<BookResponse> ToBookContract(IEnumerable<BookDb> items);
+        IEnumerable<BookResponse> ToBookContract(IEnumerable<Document> items);
 
-        BookResponse ToBookContract(BookDb book);
+        BookResponse ToBookContract(Document book);
 
-        BookDb ToBookDbModel(int userId, BookRankRequest request);
+        Document ToDocumentModel(int userId, BookRankRequest request);
 
-        BookDb ToBookDbModel(int userId, BookDb response, BookUpdateRequest request);
+        Document ToDocumentModel(int userId, BookResponse response, BookUpdateRequest request);
     }
 }

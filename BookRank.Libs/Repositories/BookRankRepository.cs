@@ -9,54 +9,56 @@ namespace BookRank.Libs.Repositories
 {
     public class BookRankRepository : IBookRankRepository
     {
-        private readonly DynamoDBContext _context;
+        private readonly Table _table;
+
+        private const string TableName = "BookRank";
 
         public BookRankRepository(IAmazonDynamoDB dynamoDBClient)
         {
-            _context = new DynamoDBContext(dynamoDBClient);
+            _table = Table.LoadTable(dynamoDBClient, TableName);
         }
 
-        public async Task<IEnumerable<BookDb>> GetAllBooks()
+        public async Task<IEnumerable<Document>> GetAllBooks()
         {
-            return await _context.ScanAsync<BookDb>(new List<ScanCondition>()).GetRemainingAsync();
+            var config = new ScanOperationConfig();
+
+            return await _table.Scan(config).GetRemainingAsync();
         }
 
-        public async Task<BookDb> GetBook(int userId, string bookName)
+        public async Task<Document> GetBook(int userId, string bookName)
         {
-            return await _context.LoadAsync<BookDb>(userId, bookName);
+            return await _table.GetItemAsync(userId, bookName);
         }
 
-        public async Task<IEnumerable<BookDb>> GetUsersRankedBooksByTitle(int userId, string bookName)
+        public async Task<IEnumerable<Document>> GetUsersRankedBooksByTitle(int userId, string bookName)
         {
-            var config = new DynamoDBOperationConfig
+            var filter = new QueryFilter("UserId", QueryOperator.Equal, userId);
+            filter.AddCondition("BookName", QueryOperator.BeginsWith, bookName);
+
+            return await _table.Query(filter).GetRemainingAsync();
+        }
+
+        public async Task AddBook(Document document)
+        {
+            await _table.PutItemAsync(document);
+        }
+
+        public async Task UpdateBook(Document document)
+        {
+            await _table.UpdateItemAsync(document);
+        }
+
+        public async Task<IEnumerable<Document>> GetBookRank(string bookName)
+        {
+            var filter = new QueryFilter("BookName", QueryOperator.Equal, bookName);
+
+            var config = new QueryOperationConfig
             {
-                QueryFilter = new List<ScanCondition>
-                {
-                    new ScanCondition("BookName", ScanOperator.BeginsWith, bookName)
-                }
+                IndexName = "BookName-index",
+                Filter = filter
             };
 
-            return await _context.QueryAsync<BookDb>(userId, config).GetRemainingAsync();
-        }
-
-        public async Task AddBook(BookDb bookDb)
-        {
-            await _context.SaveAsync(bookDb);
-        }
-
-        public async Task UpdateBook(BookDb bookDb)
-        {
-            await _context.SaveAsync(bookDb);
-        }
-
-        public async Task<IEnumerable<BookDb>> GetBookRank(string bookName)
-        {
-            var config = new DynamoDBOperationConfig
-            {
-                IndexName = "BookName-index"
-            };
-
-            return await _context.QueryAsync<BookDb>(bookName, config).GetRemainingAsync();
+            return await _table.Query(config).GetRemainingAsync();
         }
     }
 }

@@ -43,16 +43,16 @@ namespace BookRank.Services
 
         public async Task AddBook(int userId, BookRankRequest request)
         {
-            var bookDb = _mapper.ToBookDbModel(userId, request);
+            var bookDb = _mapper.ToDocumentModel(userId, request);
 
             await _bookRankRepository.AddBook(bookDb);
         }
 
         public async Task UpdateBook(int userId, BookUpdateRequest request)
         {
-            var response = await _bookRankRepository.GetBook(userId, request.BookName);
+            var response = await GetBook(userId, request.BookName);
 
-            var bookDb = _mapper.ToBookDbModel(userId, response, request);
+            var bookDb = _mapper.ToDocumentModel(userId, response, request);
 
             await _bookRankRepository.UpdateBook(bookDb);
         }
@@ -61,7 +61,7 @@ namespace BookRank.Services
         {
             var response = await _bookRankRepository.GetBookRank(bookName);
 
-            var overallBookRanking = Math.Round(response.Select(x => x.Ranking).Average());
+            var overallBookRanking = Math.Round(response.Select(x => x["Ranking"].AsInt()).Average());
 
             return new BookRankResponse
             {

@@ -1,4 +1,4 @@
-﻿using BookRank.Libs.Models;
+﻿using Amazon.DynamoDBv2.DocumentModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,16 +6,16 @@ namespace BookRank.Libs.Repositories
 {
     public interface IBookRankRepository
     {
-        Task<IEnumerable<BookDb>> GetAllBooks();
+        Task<IEnumerable<Document>> GetAllBooks();
 
-        Task<BookDb> GetBook(int userId, string bookName);
+        Task<Document> GetBook(int userId, string bookName);
 
-        Task<IEnumerable<BookDb>> GetUsersRankedBooksByTitle(int userId, string bookName);
+        Task<IEnumerable<Document>> GetUsersRankedBooksByTitle(int userId, string bookName);
 
-        Task AddBook(BookDb bookDb);
+        Task AddBook(Document document);
 
-        Task UpdateBook(BookDb bookDb);
+        Task UpdateBook(Document document);
 
-        Task<IEnumerable<BookDb>> GetBookRank(string bookName);
+        Task<IEnumerable<Document>> GetBookRank(string bookName);
     }
 }
