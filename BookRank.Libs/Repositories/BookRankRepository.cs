@@ -1,62 +1,25 @@
 ﻿using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
-using Amazon.DynamoDBv2.DocumentModel;
-using BookRank.Libs.Models;
-using System.Collections.Generic;
+using Amazon.DynamoDBv2.Model;
 using System.Threading.Tasks;
 
 namespace BookRank.Libs.Repositories
 {
     public class BookRankRepository : IBookRankRepository
     {
-        private readonly DynamoDBContext _context;
+        private const string TableName = "BookRank";
 
-        public BookRankRepository(IAmazonDynamoDB dynamoDBClient)
+        private readonly IAmazonDynamoDB _dynamoDbClient;
+
+        public BookRankRepository(IAmazonDynamoDB dynamoDbClient)
         {
-            _context = new DynamoDBContext(dynamoDBClient);
+            _dynamoDbClient = dynamoDbClient;
         }
 
-        public async Task<IEnumerable<BookDb>> GetAllBooks()
+        public async Task<ScanResponse> GetAllBooks()
         {
-            return await _context.ScanAsync<BookDb>(new List<ScanCondition>()).GetRemainingAsync();
-        }
+            var scanRequest = new ScanRequest(TableName);
 
-        public async Task<BookDb> GetBook(int userId, string bookName)
-        {
-            return await _context.LoadAsync<BookDb>(userId, bookName);
-        }
-
-        public async Task<IEnumerable<BookDb>> GetUsersRankedBooksByTitle(int userId, string bookName)
-        {
-            var config = new DynamoDBOperationConfig
-            {
-                QueryFilter = new List<ScanCondition>
-                {
-                    new ScanCondition("BookName", ScanOperator.BeginsWith, bookName)
-                }
-            };
-
-            return await _context.QueryAsync<BookDb>(userId, config).GetRemainingAsync();
-        }
-
-        public async Task AddBook(BookDb bookDb)
-        {
-            await _context.SaveAsync(bookDb);
-        }
-
-        public async Task UpdateBook(BookDb bookDb)
-        {
-            await _context.SaveAsync(bookDb);
-        }
-
-        public async Task<IEnumerable<BookDb>> GetBookRank(string bookName)
-        {
-            var config = new DynamoDBOperationConfig
-            {
-                IndexName = "BookName-index"
-            };
-
-            return await _context.QueryAsync<BookDb>(bookName, config).GetRemainingAsync();
+            return await _dynamoDbClient.ScanAsync(scanRequest);
         }
     }
 }

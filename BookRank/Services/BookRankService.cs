@@ -26,48 +26,5 @@ namespace BookRank.Services
 
             return _mapper.ToBookContract(response);
         }
-
-        public async Task<BookResponse> GetBook(int userId, string bookName)
-        {
-            var response = await _bookRankRepository.GetBook(userId, bookName);
-
-            return _mapper.ToBookContract(response);
-        }
-
-        public async Task<IEnumerable<BookResponse>> GetUsersRankedBooksByTitle(int userId, string bookName)
-        {
-            var response = await _bookRankRepository.GetUsersRankedBooksByTitle(userId, bookName);
-
-            return _mapper.ToBookContract(response);
-        }
-
-        public async Task AddBook(int userId, BookRankRequest request)
-        {
-            var bookDb = _mapper.ToBookDbModel(userId, request);
-
-            await _bookRankRepository.AddBook(bookDb);
-        }
-
-        public async Task UpdateBook(int userId, BookUpdateRequest request)
-        {
-            var response = await _bookRankRepository.GetBook(userId, request.BookName);
-
-            var bookDb = _mapper.ToBookDbModel(userId, response, request);
-
-            await _bookRankRepository.UpdateBook(bookDb);
-        }
-
-        public async Task<BookRankResponse> GetBookRank(string bookName)
-        {
-            var response = await _bookRankRepository.GetBookRank(bookName);
-
-            var overallBookRanking = Math.Round(response.Select(x => x.Ranking).Average());
-
-            return new BookRankResponse
-            {
-                BookName = bookName,
-                OverallRanking = overallBookRanking
-            };
-        }
     }
 }

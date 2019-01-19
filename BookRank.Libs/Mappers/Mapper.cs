@@ -1,53 +1,27 @@
-﻿using BookRank.Contracts;
-using BookRank.Libs.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Amazon.DynamoDBv2.Model;
+using BookRank.Contracts;
 
 namespace BookRank.Libs.Mappers
 {
     public class Mapper : IMapper
     {
-        public IEnumerable<BookResponse> ToBookContract(IEnumerable<BookDb> items)
+        public IEnumerable<BookResponse> ToBookContract(ScanResponse response)
         {
-            return items.Select(ToBookContract);
+            return response.Items.Select(ToBookContract);
         }
 
-        public BookResponse ToBookContract(BookDb book)
+        private BookResponse ToBookContract(Dictionary<string, AttributeValue> item)
         {
             return new BookResponse
             {
-                BookName = book.BookName,
-                Description = book.Description,
-                Genres = book.Genres,
-                Ranking = book.Ranking,
-                TimeRanked = book.RankedDateTime
-            };
-        }
-
-        public BookDb ToBookDbModel(int userId, BookRankRequest request)
-        {
-            return new BookDb
-            {
-                UserId = userId,
-                BookName = request.BookName,
-                Description = request.Description,
-                Genres = request.Genres,
-                Ranking = request.Ranking,
-                RankedDateTime = DateTime.UtcNow.ToString()
-            };
-        }
-
-        public BookDb ToBookDbModel(int userId, BookDb response, BookUpdateRequest request)
-        {
-            return new BookDb
-            {
-                UserId = response.UserId,
-                BookName = response.BookName,
-                Description = response.Description,
-                Genres = response.Genres,
-                Ranking = request.Ranking,
-                RankedDateTime = DateTime.UtcNow.ToString()
+                BookName = item["BookName"].S,
+                Description = item["Description"].S,
+                Genres = item["Genres"].SS,
+                Ranking = Convert.ToInt32(item["Ranking"].N),
+                TimeRanked = item["RankedDateTime"].S
             };
         }
     }
