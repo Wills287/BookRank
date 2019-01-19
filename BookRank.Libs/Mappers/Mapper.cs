@@ -13,6 +13,23 @@ namespace BookRank.Libs.Mappers
             return response.Items.Select(ToBookContract);
         }
 
+        public IEnumerable<BookResponse> ToBookContract(QueryResponse response)
+        {
+            return response.Items.Select(ToBookContract);
+        }
+
+        public BookResponse ToBookContract(GetItemResponse response)
+        {
+            return new BookResponse
+            {
+                BookName = response.Item["BookName"].S,
+                Description = response.Item["Description"].S,
+                Genres = response.Item["Genres"].SS,
+                Ranking = Convert.ToInt32(response.Item["Ranking"].N),
+                TimeRanked = response.Item["RankedDateTime"].S
+            };
+        }
+
         private BookResponse ToBookContract(Dictionary<string, AttributeValue> item)
         {
             return new BookResponse

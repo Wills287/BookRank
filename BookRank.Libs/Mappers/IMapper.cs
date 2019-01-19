@@ -7,5 +7,9 @@ namespace BookRank.Libs.Mappers
     public interface IMapper
     {
         IEnumerable<BookResponse> ToBookContract(ScanResponse response);
+
+        IEnumerable<BookResponse> ToBookContract(QueryResponse response);
+
+        BookResponse ToBookContract(GetItemResponse response);
     }
 }

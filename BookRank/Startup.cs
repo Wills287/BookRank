@@ -21,6 +21,7 @@ namespace BookRank
                 Region = RegionEndpoint.EUWest2
             });
 
+            services.AddSingleton<ISetupService, SetupService>();
             services.AddSingleton<IBookRankService, BookRankService>();
             services.AddSingleton<IBookRankRepository, BookRankRepository>();
             services.AddSingleton<IMapper, Mapper>();
