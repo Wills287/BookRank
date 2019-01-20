@@ -12,14 +12,35 @@ namespace BookRank
 {
     public class Startup
     {
+        private readonly IHostingEnvironment _env;
+
+        public Startup(IHostingEnvironment env)
+        {
+            _env = env;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
 
-            services.AddAWSService<IAmazonDynamoDB>(new AWSOptions
+            if (_env.IsDevelopment())
             {
-                Region = RegionEndpoint.EUWest2
-            });
+                services.AddSingleton<IAmazonDynamoDB>(x =>
+                {
+                    var clientConfig = new AmazonDynamoDBConfig
+                    {
+                        ServiceURL = "http://localhost:8000"
+                    };
+                    return new AmazonDynamoDBClient(clientConfig);
+                });
+            }
+            else
+            {
+                services.AddAWSService<IAmazonDynamoDB>(new AWSOptions
+                {
+                    Region = RegionEndpoint.EUWest2
+                });
+            }
 
             services.AddSingleton<IBookRankService, BookRankService>();
             services.AddSingleton<IBookRankRepository, BookRankRepository>();

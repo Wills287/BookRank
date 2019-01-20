@@ -50,6 +50,7 @@ namespace BookRank.Integration.Tests.Setup
 
         public void Dispose()
         {
+            TestDataSetup.TearDownStore("BookRank");
             Client?.Dispose();
         }
     }
